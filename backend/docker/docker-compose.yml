@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres
+    container_name: postgres_Automarket
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: prod
+      POSTGRES_PASSWORD: prod123
+      POSTGRES_DB: autoMarket
+    ports:
+      - "5432:5432"
+    volumes:
+      - autoMarketDb:/var/lib/postgresql/data
+   
+
+volumes:
+  autoMarketDb:

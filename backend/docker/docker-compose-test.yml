@@ -1,0 +1,42 @@
+services:
+
+  mongodb:
+
+    image: mongo:latest
+    container_name: mongodb_test
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: test
+      MONGO_INITDB_ROOT_PASSWORD: test123
+    volumes:
+      - mongo_data_test:/data/db
+
+  db:
+    image: postgres
+    container_name: postgres_Automarket_test
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test123
+      POSTGRES_DB: autoMarketTest
+    ports:
+      - "5434:5432"
+    volumes:
+      - autoMarketDbTest:/var/lib/postgresql
+  
+  redis:
+    image: redis:7.2
+    container_name: redis_test
+    ports:
+      - "6380:6379"
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "test123"]
+    volumes:
+      - redis_data_test:/data
+    restart: unless-stopped
+
+volumes:
+  autoMarketDbTest:
+  mongo_data_test:
+  redis_data_test:
