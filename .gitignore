@@ -1,0 +1,32 @@
+# ===== Maven / Java =====
+# Компиляция и сборка
+target/
+*.class
+*.jar
+*.war
+
+# Генерируемые файлы Maven
+generated-sources/
+generated-test-sources/
+maven-status/
+maven-archiver/
+
+# ===== IDE =====
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== Docker =====
+# Игнорируем только локальные override или лог-файлы
+docker/*-override.yml
+docker/*.log
+
+# ===== Логи и временные файлы =====
+*.log
+*.tmp
+*.swp
