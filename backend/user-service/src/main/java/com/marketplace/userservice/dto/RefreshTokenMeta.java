@@ -18,4 +18,5 @@ public class RefreshTokenMeta {
     private Instant expiresAt;
     private String userAgent;
     private String ip;
+    private String deviceId;
 }

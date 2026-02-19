@@ -18,6 +18,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.Duration;
+import java.time.Instant;
 
 @Slf4j
 @Service
@@ -32,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public AuthResponse registerUser(RegisterRequest request, String ip, String userAgent) {
+    public AuthResponse registerUser(RegisterRequest request, String ip, String userAgent,String deviceId) {
 
         Role role = roleRepository.findByName(RoleType.BUYER)
                 .orElseThrow(() -> new IllegalStateException("Required role not found: " + RoleType.BUYER));
@@ -55,8 +57,8 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
-        refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent);
-        log.debug("Refresh token saved for userId={} on device [IP={}, User-Agent={}]", user.getId(), ip, userAgent);
+        refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent,deviceId);
+        log.debug("Refresh token saved for userId={} on device [IP={}, User-Agent={},deviceId={}]", user.getId(), ip, userAgent,deviceId);
 
         return new AuthResponse()
                 .setAccessToken(accessToken)
@@ -64,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse login(LoginRequest request, String ip, String userAgent) {
+    public AuthResponse login(LoginRequest request, String ip, String userAgent,String deviceId) {
 
         User user = findUserByIdentifier(request.getIdentifier());
 
@@ -73,14 +75,14 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidCredentialsException("Wrong password");
         }
 
-        refreshTokenStore.deleteByDevice(ip, userAgent, user.getId());
+        refreshTokenStore.deleteByDevice(user.getId(),deviceId);
         log.debug("Old refresh token deleted for userId={} from device [IP={}, User-Agent={}]", user.getId(), ip, userAgent);
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
-        refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent);
-        log.info("User logged in successfully: userId={}, ip={}", user.getId(), ip);
+        refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent,deviceId);
+        log.info("User logged in successfully: userId={}, ip={},deviceId={}", user.getId(), ip,deviceId);
 
         return new AuthResponse()
                 .setAccessToken(accessToken)
@@ -88,31 +90,34 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse refreshAccessToken(RefreshTokenRequest request, String ip, String userAgent) {
+    public AuthResponse refreshAccessToken(RefreshTokenRequest request, String ip, String userAgent,String deviceId) {
 
-        RefreshTokenMeta meta = refreshTokenStore.getByToken(request.getRefreshToken());
+        String refreshToken = request.getRefreshToken();
 
-        if (meta == null) {
-            log.warn("Invalid refresh token attempt from IP={}, User-Agent={}", ip, userAgent);
+        RefreshTokenMeta meta = refreshTokenStore.getByToken(refreshToken);
+
+        if (meta == null || meta.getExpiresAt().isBefore(Instant.now())) {
+            log.warn("Invalid refresh token attempt from IP={}, User-Agent={} ,deviceId ={}", ip, userAgent,deviceId);
             throw new InvalidCredentialsException("Refresh token is not valid");
         }
 
-        if (!meta.getIp().equals(ip) || !meta.getUserAgent().equals(userAgent)) {
-            log.warn("Refresh token device mismatch for userId={}, IP={}, User-Agent={}", meta.getUserId(), ip, userAgent);
+        if (!meta.getDeviceId().equals(deviceId)) {
+            log.warn("Refresh token device mismatch for userId={}, IP={}, User-Agent={},deviceId ={}", meta.getUserId(), ip, userAgent,deviceId);
             throw new InvalidCredentialsException("Device info does not match");
         }
 
         User user = userRepository.findById(meta.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User does not exist"));
 
-        refreshTokenStore.deleteByDevice(ip, userAgent, user.getId());
-        log.debug("Old refresh token deleted for userId={} during refresh", user.getId());
+
+        if(Duration.between(Instant.now(), meta.getExpiresAt()).toDays() < 1){
+            log.debug("Old refresh token deleted for userId={} during refresh", user.getId());
+            refreshToken = jwtService.generateRefreshToken(user);
+            refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent,deviceId);
+            log.info("Refresh token rotated for userId={}, IP={},deviceId={}", user.getId(), ip,deviceId);
+        }
 
         String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
-
-        refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent);
-        log.info("Refresh token rotated for userId={}, IP={}", user.getId(), ip);
 
         return new AuthResponse()
                 .setAccessToken(accessToken)

@@ -45,4 +45,15 @@ public class GlobalExceptionHandler {
         body.put("path", request.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }
+
+    @ExceptionHandler(MissingDeviceIdException.class)
+    public ResponseEntity<Map<String, Object>> MissingDeviceIdException(InvalidCredentialsException ex, HttpServletRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", Instant.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "BAD REQUEST");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
 }

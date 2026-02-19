@@ -16,9 +16,10 @@ public interface RefreshTokenStore {
      * @param refreshToken raw refresh token value
      * @param userId user identifier
      * @param ip client IP address
+     * @param deviceId client unique string
      * @param userAgent client user-agent string
      */
-    void save(String refreshToken, Long userId, String ip, String userAgent);
+    void save(String refreshToken, Long userId, String ip, String userAgent,String deviceId);
 
     /**
      * Retrieves refresh token metadata by token value.
@@ -29,22 +30,20 @@ public interface RefreshTokenStore {
     RefreshTokenMeta getByToken(String refreshToken);
 
 
-
-    /**
-     * Invalidates refresh token bound to a specific device.
-     *
-     * @param ip client IP address
-     * @param userAgent client user-agent string
-     * @param userId user identifier
-     */
-    void deleteByDevice(String ip, String userAgent, Long userId);
-
-
     /**
      * Invalidates refresh token bound to a specific device.
      *
      * @param userId user identifier
+     * @param deviceId client unique string
      */
-    void deleteAllByUserIdAnd(Long userId);
+    void deleteByDevice(Long userId,String deviceId);
+
+
+    /**
+     * Invalidates refresh token bound to a specific device.
+     *
+     * @param userId user identifier
+     */
+    //void deleteAllByUserIdAnd(Long userId);
 
 }

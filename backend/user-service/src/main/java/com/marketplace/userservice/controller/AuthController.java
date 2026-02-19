@@ -5,13 +5,14 @@ import com.marketplace.userservice.dto.AuthResponse;
 import com.marketplace.userservice.dto.LoginRequest;
 import com.marketplace.userservice.dto.RefreshTokenRequest;
 import com.marketplace.userservice.dto.RegisterRequest;
+import com.marketplace.userservice.exception.MissingDeviceIdException;
 import com.marketplace.userservice.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,13 +39,19 @@ public class AuthController {
     )
     @PostMapping("/register")
     public AuthResponse registerUser(@RequestBody @Valid RegisterRequest request,
-                                     HttpServletResponse http)
+                                     HttpServletRequest http)
     {
+        String deviceId = http.getHeader("X-Device-Id");
+        if (deviceId == null || deviceId.isBlank()) {
+            throw new MissingDeviceIdException("X-Device-Id header is required");
+        }
+
         log.info("Registering user {}", request);
 
         return authService.registerUser(request,
                 http.getHeader("X-Forwarded-For"),
-                http.getHeader("User-Agent"));
+                http.getHeader("User-Agent"),
+                deviceId);
     }
 
     @Operation(
@@ -59,11 +66,16 @@ public class AuthController {
     )
     @PostMapping("/login")
     public AuthResponse login(@RequestBody @Valid LoginRequest request,
-                              HttpServletResponse http) {
+                              HttpServletRequest http) {
         log.info("User login attempt {}", request);
+        String deviceId = http.getHeader("X-Device-Id");
+        if (deviceId == null || deviceId.isBlank()) {
+            throw new MissingDeviceIdException("X-Device-Id header is required");
+        }
         return authService.login(request,
                 http.getHeader("X-Forwarded-For"),
-                http.getHeader("User-Agent"));
+                http.getHeader("User-Agent"),
+                deviceId);
     }
 
     @Operation(
@@ -77,10 +89,15 @@ public class AuthController {
     )
     @PostMapping("/refresh")
     public AuthResponse refreshToken(@RequestBody @Valid RefreshTokenRequest request,
-                                     HttpServletResponse http) {
+                                     HttpServletRequest http) {
+        String deviceId = http.getHeader("X-Device-Id");
+        if (deviceId == null || deviceId.isBlank()) {
+            throw new MissingDeviceIdException("X-Device-Id header is required");
+        }
         log.info("Refreshing token for request: {} ", request);
         return authService.refreshAccessToken(request,
                 http.getHeader("X-Forwarded-For"),
-                http.getHeader("User-Agent"));
+                http.getHeader("User-Agent"),
+                deviceId);
     }
 }

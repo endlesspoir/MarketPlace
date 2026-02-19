@@ -20,9 +20,10 @@ public interface AuthService {
      * @param request registration request containing user data
      * @param ip client IP address
      * @param userAgent client User-Agent string
+     * @param deviceId client unique string
      * @return authentication response containing access and refresh tokens
      */
-    AuthResponse registerUser(RegisterRequest request, String ip, String userAgent);
+    AuthResponse registerUser(RegisterRequest request, String ip, String userAgent,String deviceId);
 
     /**
      * Authenticates a user using login credentials and issues new tokens.
@@ -30,9 +31,10 @@ public interface AuthService {
      * @param request login request containing identifier (email, phone, or login) and password
      * @param ip client IP address
      * @param userAgent client User-Agent string
+     * @param deviceId client unique string
      * @return authentication response containing access and refresh tokens
      */
-    AuthResponse login(LoginRequest request, String ip, String userAgent);
+    AuthResponse login(LoginRequest request, String ip, String userAgent,String deviceId);
 
     /**
      * Refreshes an access token using a valid refresh token.
@@ -40,7 +42,8 @@ public interface AuthService {
      * @param request refresh token request
      * @param ip client IP address
      * @param userAgent client User-Agent string
+     * @param deviceId client unique string
      * @return authentication response containing new access and refresh tokens
      */
-    AuthResponse refreshAccessToken(RefreshTokenRequest request, String ip, String userAgent);
+    AuthResponse refreshAccessToken(RefreshTokenRequest request, String ip, String userAgent,String deviceId);
 }
