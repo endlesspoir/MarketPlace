@@ -1,8 +1,8 @@
 package com.automarket.userservice.mapper;
 
 import com.automarket.userservice.dto.RegisterRequest;
-import com.automarket.userservice.repository.User;
-import com.automarket.userservice.model.postgres.UserProfile;
+import com.automarket.userservice.model.User;
+import com.automarket.userservice.model.UserProfile;
 
 
 import java.util.HashSet;

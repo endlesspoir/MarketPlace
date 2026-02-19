@@ -24,13 +24,5 @@ public interface JwtService {
      */
     String generateRefreshToken(User user);
 
-    /**
-     * Extracts "type" claim from token ("access" or "refresh").
-     * Token signature and expiration are validated before extraction.
-     *
-     * @param token JWT string
-     * @param isRefreshToken whether refresh secret should be used for validation
-     * @return token type claim value
-     */
-    String getTokenType(String token, boolean isRefreshToken);
+
 }
