@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
@@ -46,14 +45,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }
 
-    @ExceptionHandler(MissingDeviceIdException.class)
-    public ResponseEntity<Map<String, Object>> MissingDeviceIdException(InvalidCredentialsException ex, HttpServletRequest request) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", Instant.now());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "BAD REQUEST");
-        body.put("message", ex.getMessage());
-        body.put("path", request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-    }
+
 }

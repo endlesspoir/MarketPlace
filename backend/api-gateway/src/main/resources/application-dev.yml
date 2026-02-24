@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 5s
+
+jwt:
+  secret: ${JWT_ACCESS_SECRET}
+
+logging:
+  level:
+    root: DEBUG
+    com.marketplace.gateway: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

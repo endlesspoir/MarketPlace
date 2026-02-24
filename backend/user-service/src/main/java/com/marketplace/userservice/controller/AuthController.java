@@ -5,7 +5,7 @@ import com.marketplace.userservice.dto.AuthResponse;
 import com.marketplace.userservice.dto.LoginRequest;
 import com.marketplace.userservice.dto.RefreshTokenRequest;
 import com.marketplace.userservice.dto.RegisterRequest;
-import com.marketplace.userservice.exception.MissingDeviceIdException;
+
 import com.marketplace.userservice.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,9 +42,7 @@ public class AuthController {
                                      HttpServletRequest http)
     {
         String deviceId = http.getHeader("X-Device-Id");
-        if (deviceId == null || deviceId.isBlank()) {
-            throw new MissingDeviceIdException("X-Device-Id header is required");
-        }
+
 
         log.info("Registering user {}", request);
 
@@ -69,9 +67,7 @@ public class AuthController {
                               HttpServletRequest http) {
         log.info("User login attempt {}", request);
         String deviceId = http.getHeader("X-Device-Id");
-        if (deviceId == null || deviceId.isBlank()) {
-            throw new MissingDeviceIdException("X-Device-Id header is required");
-        }
+
         return authService.login(request,
                 http.getHeader("X-Forwarded-For"),
                 http.getHeader("User-Agent"),
@@ -91,9 +87,7 @@ public class AuthController {
     public AuthResponse refreshToken(@RequestBody @Valid RefreshTokenRequest request,
                                      HttpServletRequest http) {
         String deviceId = http.getHeader("X-Device-Id");
-        if (deviceId == null || deviceId.isBlank()) {
-            throw new MissingDeviceIdException("X-Device-Id header is required");
-        }
+
         log.info("Refreshing token for request: {} ", request);
         return authService.refreshAccessToken(request,
                 http.getHeader("X-Forwarded-For"),
