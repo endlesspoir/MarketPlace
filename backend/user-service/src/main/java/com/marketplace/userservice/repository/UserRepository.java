@@ -1,5 +1,6 @@
 package com.marketplace.userservice.repository;
 
+import jakarta.validation.constraints.Email;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.marketplace.userservice.model.User;
@@ -16,4 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
    Optional<User> findByLogin(String username);
 
    Optional<User> findByPhone(String phone);
+
+    boolean existsByLoginAndIdNot(String login, Long id);
+
+    boolean existsByEmailAndIdNot(String email, Long id);
 }

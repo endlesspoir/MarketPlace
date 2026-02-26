@@ -6,7 +6,7 @@ import com.marketplace.userservice.dto.UserProfileResponse;
 public interface UserService {
 
 
-    UserProfileResponse getUserProfileById(Long id);
+    UserProfileResponse getUserProfile(Long id);
 
     UserProfileResponse updateUserProfile(Long id, UpdateUserProfileRequest request);
 

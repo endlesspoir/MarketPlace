@@ -5,6 +5,7 @@ import com.marketplace.userservice.dto.UpdateUserProfileRequest;
 import com.marketplace.userservice.dto.UserProfileResponse;
 import com.marketplace.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.headers.Header;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +19,12 @@ public class UserController {
 
     @GetMapping("me")
     public UserProfileResponse getUserProfile(@RequestHeader("X-User-Id") Long id){
-        return userService.getUserProfileById(id);
+        return userService.getUserProfile(id);
     }
 
     @PatchMapping("me")
-    public UserProfileResponse updateUserProfile(@RequestHeader("X-User-Id") Long id,@RequestBody UpdateUserProfileRequest request){
-
-    return null;
+    public UserProfileResponse updateUserProfile(@RequestHeader("X-User-Id") Long id,@Valid @RequestBody UpdateUserProfileRequest request){
+    return userService.updateUserProfile(id, request);
     }
 
 }

@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 public class LoginRequest {
 
-    @NotBlank
+    @NotBlank(message = "{auth.identifier.notBlank}")
     private String identifier;
 
-    @NotBlank
+    @NotBlank(message = "{auth.password.notBlank}")
     private String password;
 }
