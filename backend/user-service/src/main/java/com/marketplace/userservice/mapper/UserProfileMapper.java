@@ -1,6 +1,7 @@
 package com.marketplace.userservice.mapper;
 
 import com.marketplace.userservice.dto.UserProfileResponse;
+import com.marketplace.userservice.dto.UserPublicProfileResponse;
 import com.marketplace.userservice.model.Role;
 import com.marketplace.userservice.model.User;
 import com.marketplace.userservice.model.UserProfile;
@@ -29,5 +30,14 @@ public class UserProfileMapper {
                 .setRoles(user.getRoles().stream()
                         .map(role -> role.getName().toString())
                         .collect(Collectors.toSet()));
+    }
+
+    public static UserPublicProfileResponse toUserPublicProfile(User user){
+
+        return new UserPublicProfileResponse().
+                setFirstname(user.getFirstName())
+                .setLastname(user.getLastName())
+                .setBio(user.getProfile().getBio())
+                .setAvatarUrl(user.getProfile().getAvatarUrl());
     }
 }

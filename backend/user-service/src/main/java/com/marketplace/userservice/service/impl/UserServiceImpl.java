@@ -2,9 +2,12 @@ package com.marketplace.userservice.service.impl;
 
 import com.marketplace.userservice.dto.UpdateUserProfileRequest;
 import com.marketplace.userservice.dto.UserProfileResponse;
+import com.marketplace.userservice.dto.UserPublicProfileResponse;
 import com.marketplace.userservice.exception.UserAlreadyExistsException;
 import com.marketplace.userservice.exception.UserNotFoundException;
+import com.marketplace.userservice.exception.UserNotFoundPublicProfile;
 import com.marketplace.userservice.mapper.UserProfileMapper;
+import com.marketplace.userservice.model.RoleType;
 import com.marketplace.userservice.model.User;
 import com.marketplace.userservice.repository.UserRepository;
 import com.marketplace.userservice.service.UserService;
@@ -23,18 +26,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileResponse getUserProfile(Long id) {
-        log.debug("Stage - getUserProfileById : { }",id);
+        log.debug("Stage - getUserProfileById : {}",id);
         return UserProfileMapper.
                 toUserProfile(userRepository.findById(id)
-                        .orElseThrow(() -> new UserNotFoundException(id.toString())));
+                        .orElseThrow(() -> new UserNotFoundException("User not found with id " +id)));
     }
 
     @Override
     @Transactional
     public UserProfileResponse updateUserProfile(Long id, UpdateUserProfileRequest request) {
-        log.debug("Stage - start updateUserProfile : { },{ }",id,request);
+        log.debug("Stage - start updateUserProfile : {},{}",id,request);
 
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id.toString()));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
 
         if (request.getEmail() != null &&
                 userRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
@@ -48,9 +51,26 @@ public class UserServiceImpl implements UserService {
 
         patchUser(user,request);
 
-        log.debug("Stage - start updateUserProfile : { }",user);
+        log.debug("Stage - finish updateUserProfile : {}",user);
 
         return UserProfileMapper.toUserProfile(user);
+    }
+
+    @Override
+    public UserPublicProfileResponse getUserPublicProfile(Long id) {
+
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundPublicProfile("Profile not found with id " + id));
+
+        log.debug("Stage - start getUserPublicProfile : {}",user);
+
+        user.getRoles().stream()
+                .filter(role ->role.getName() == RoleType.SELLER)
+                .findAny()
+                .orElseThrow(() -> new UserNotFoundPublicProfile("Profile not found with id " + id));
+
+        log.debug("Stage - finish getUserPublicProfile : {}",user);
+
+        return UserProfileMapper.toUserPublicProfile(user);
     }
 
 
