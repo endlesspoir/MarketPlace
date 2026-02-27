@@ -29,3 +29,8 @@ jwt:
   refresh-secret: "2L0sVw9A7xE3bC+T0pQ8M6gKq1JYwZf5Xr4nU9mH2A0="
   access-expiration: 15m
   refresh-expiration: 7d
+cloud:
+  cloudinary:
+    cloud-name:
+    api-key:
+    api-secret:
