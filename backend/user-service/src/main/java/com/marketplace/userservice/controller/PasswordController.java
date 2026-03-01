@@ -2,6 +2,7 @@ package com.marketplace.userservice.controller;
 
 import com.marketplace.userservice.dto.ChangePasswordRequest;
 import com.marketplace.userservice.dto.ForgotPasswordRequest;
+import com.marketplace.userservice.dto.ResetPasswordRequest;
 import com.marketplace.userservice.service.PasswordService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
@@ -27,7 +28,14 @@ public class PasswordController {
    }
 
    @PostMapping("forgot")
+   @ResponseStatus(HttpStatus.OK)
     public void forgotPassword(@Valid @RequestBody  ForgotPasswordRequest forgotPasswordRequest) {
        passwordService.forgotPassword(forgotPasswordRequest);
+    }
+
+    @PostMapping("reset")
+    @ResponseStatus(HttpStatus.OK)
+    public void resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        passwordService.resetPassword(resetPasswordRequest);
     }
 }
