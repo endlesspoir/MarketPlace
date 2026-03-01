@@ -16,8 +16,6 @@ public class UpdateUserProfileRequest {
     @Size(min = 1, max = 20, message = "{user.lastName.size}")
     private String lastName;
 
-    @Email(message = "{user.email.invalid}")
-    private String email;
 
     @Pattern(regexp ="^\\+[1-9][0-9]{9,14}$", message = "{user.phone.invalid}")
     private String phone;

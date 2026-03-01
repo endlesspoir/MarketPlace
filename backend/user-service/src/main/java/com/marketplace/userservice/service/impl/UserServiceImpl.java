@@ -1,5 +1,6 @@
 package com.marketplace.userservice.service.impl;
 
+
 import com.marketplace.userservice.dto.UpdateUserProfileRequest;
 import com.marketplace.userservice.dto.UserProfileResponse;
 import com.marketplace.userservice.dto.UserPublicProfileResponse;
@@ -10,11 +11,14 @@ import com.marketplace.userservice.mapper.UserProfileMapper;
 import com.marketplace.userservice.model.RoleType;
 import com.marketplace.userservice.model.User;
 import com.marketplace.userservice.repository.UserRepository;
+import com.marketplace.userservice.service.FileStorageService;
 import com.marketplace.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @Slf4j
 @Service
@@ -23,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
 
     private final UserRepository userRepository;
+    private final FileStorageService fileStorageService;
 
     @Override
     public UserProfileResponse getUserProfile(Long id) {
@@ -39,10 +44,6 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
 
-        if (request.getEmail() != null &&
-                userRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
-            throw new UserAlreadyExistsException(request.getEmail());
-        }
 
         if (request.getLogin() != null &&
                 userRepository.existsByLoginAndIdNot(request.getLogin(), id)) {
@@ -73,11 +74,35 @@ public class UserServiceImpl implements UserService {
         return UserProfileMapper.toUserPublicProfile(user);
     }
 
+    public UserProfileResponse updateAvatar(MultipartFile file, Long id ) {
+
+        log.debug("Stage - start updateAvatar : {},{}",id,file);
+
+        String url = null;
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
+
+        String key = "avatars/" + user.getId() ;
+
+        fileStorageService.deleteFile(key);
+        if(file != null&&!file.isEmpty()){
+             url = fileStorageService.uploadFile(file,key);
+        }
+
+        user.getProfile().setAvatarUrl(url);
+        userRepository.save(user);
+
+        log.debug("Stage - finish updateAvatar : {}",user);
+        return UserProfileMapper.toUserProfile(user);
+    }
+
+
+
 
     private void patchUser(User user, UpdateUserProfileRequest request) {
         if (request.getFirstName() != null) user.setFirstName(request.getFirstName());
         if (request.getLastName() != null) user.setLastName(request.getLastName());
-        if (request.getEmail() != null) user.setEmail(request.getEmail());
         if (request.getPhone() != null) user.setPhone(request.getPhone());
         if (request.getLogin() != null) user.setLogin(request.getLogin());
         if (request.getCity() != null) user.getProfile().setCity(request.getCity());
