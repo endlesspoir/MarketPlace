@@ -17,6 +17,10 @@ public class RegisterRequest {
 
     @NotBlank(message = "{user.password.notBlank}")
     @Size(min = 8, max = 64, message = "{user.password.size}")
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,64}$",
+            message = "{user.password.strong}"
+    )
     private String password;
 
     @NotBlank(message = "{user.login.notBlank}")
