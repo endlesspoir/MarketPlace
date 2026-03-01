@@ -1,5 +1,6 @@
 package com.marketplace.userservice.service.impl;
 
+import com.marketplace.userservice.config.PasswordResetConfig;
 import com.marketplace.userservice.service.PasswordResetTokenStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +17,11 @@ public class PasswordResetTokenStoreImpl implements PasswordResetTokenStore {
 
     private final StringRedisTemplate stringRedisTemplate;
 
-    private static final Duration TTL = Duration.ofMinutes(15);
+    private final PasswordResetConfig passwordResetConfig;
 
     @Override
     public void save(String token, Long id) {
-        stringRedisTemplate.opsForValue().set(key(token),id.toString(),TTL);
+        stringRedisTemplate.opsForValue().set(key(token),id.toString(),passwordResetConfig.getResetTokenTtl());
     }
 
     @Override

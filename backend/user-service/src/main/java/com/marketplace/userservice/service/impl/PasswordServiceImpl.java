@@ -1,7 +1,9 @@
 package com.marketplace.userservice.service.impl;
 
+import com.marketplace.userservice.config.PasswordResetConfig;
 import com.marketplace.userservice.dto.ChangePasswordRequest;
 import com.marketplace.userservice.dto.ForgotPasswordRequest;
+import com.marketplace.userservice.exception.FileStorageException;
 import com.marketplace.userservice.exception.InvalidCredentialsException;
 import com.marketplace.userservice.exception.UserNotFoundException;
 import com.marketplace.userservice.model.User;
@@ -23,6 +25,7 @@ public class PasswordServiceImpl implements PasswordService {
     private final PasswordEncoder passwordEncoder;
     private final RabitEventPublisher passwordRabitEventPublisher;
     private final PasswordResetTokenStore passwordResetTokenStore;
+    private final PasswordResetConfig passwordResetConfig;
 
     @Override
     @Transactional
@@ -49,9 +52,14 @@ public class PasswordServiceImpl implements PasswordService {
                 .ifPresent(user -> {
             String token = TokenGenerator.generateToken();
 
-            passwordResetTokenStore.save(token, user.getId());
-
-
+                    try {
+                        passwordResetTokenStore.save(token, user.getId());
+                        passwordRabitEventPublisher.publishResetPassword(user.getEmail(),
+                                passwordResetConfig.getFrontendUrl() + "?token=" + token,
+                                user.getLogin());
+                    } catch (Exception e) {
+                        throw new FileStorageException("Failed to process password reset for user " + user.getEmail());
+                    }
         });
     }
 }

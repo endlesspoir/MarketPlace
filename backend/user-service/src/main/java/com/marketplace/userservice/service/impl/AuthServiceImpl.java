@@ -2,6 +2,7 @@ package com.marketplace.userservice.service.impl;
 
 
 import com.marketplace.userservice.dto.*;
+import com.marketplace.userservice.exception.FileStorageException;
 import com.marketplace.userservice.exception.InvalidCredentialsException;
 import com.marketplace.userservice.exception.RoleNotFoundException;
 import com.marketplace.userservice.exception.UserNotFoundException;
@@ -58,7 +59,13 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
-        refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent,deviceId);
+        try {
+            refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent,deviceId);
+            log.debug("Refresh token saved for userId={} on device [IP={}, User-Agent={},deviceId={}]", user.getId(), ip, userAgent,deviceId);
+        } catch (Exception e) {
+            log.error("Failed to save refresh token in Redis for userId={}", user.getId(), e);
+            throw new FileStorageException("Failed to save refresh token for user " + user.getEmail());
+        }
         log.debug("Refresh token saved for userId={} on device [IP={}, User-Agent={},deviceId={}]", user.getId(), ip, userAgent,deviceId);
 
         return new AuthResponse()
@@ -76,13 +83,24 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidCredentialsException("Wrong password");
         }
 
-        refreshTokenStore.deleteByDevice(user.getId(),deviceId);
+        try {
+            refreshTokenStore.deleteByDevice(user.getId(), deviceId);
+        } catch (Exception e) {
+            log.error("Failed to delete old refresh token for userId={}", user.getId(), e);
+            throw new FileStorageException("Failed to delete old refresh token for user " + user.getEmail());
+        }
         log.debug("Old refresh token deleted for userId={} from device [IP={}, User-Agent={}]", user.getId(), ip, userAgent);
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
-        refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent,deviceId);
+        try {
+            refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent, deviceId);
+        } catch (Exception e) {
+            log.error("Failed to save refresh token in Redis for userId={}", user.getId(), e);
+            throw new FileStorageException("Failed to save refresh token for user " + user.getEmail());
+        }
+
         log.info("User logged in successfully: userId={}, ip={},deviceId={}", user.getId(), ip,deviceId);
 
         return new AuthResponse()
@@ -114,7 +132,12 @@ public class AuthServiceImpl implements AuthService {
         if(Duration.between(Instant.now(), meta.getExpiresAt()).toDays() < 1){
             log.debug("Old refresh token deleted for userId={} during refresh", user.getId());
             refreshToken = jwtService.generateRefreshToken(user);
-            refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent,deviceId);
+            try {
+                refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent, deviceId);
+            } catch (Exception e) {
+                log.error("Failed to rotate refresh token for userId={}", user.getId(), e);
+                throw new FileStorageException("Failed to rotate refresh token for user " + user.getEmail());
+            }
             log.info("Refresh token rotated for userId={}, IP={},deviceId={}", user.getId(), ip,deviceId);
         }
 
