@@ -74,6 +74,8 @@ public class UserServiceImpl implements UserService {
         return UserProfileMapper.toUserPublicProfile(user);
     }
 
+    @Transactional
+    @Override
     public UserProfileResponse updateAvatar(MultipartFile file, Long id ) {
 
         log.debug("Stage - start updateAvatar : {},{}",id,file);
