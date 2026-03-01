@@ -3,6 +3,7 @@ package com.marketplace.userservice.service.impl;
 
 import com.marketplace.userservice.dto.*;
 import com.marketplace.userservice.exception.InvalidCredentialsException;
+import com.marketplace.userservice.exception.RoleNotFoundException;
 import com.marketplace.userservice.exception.UserNotFoundException;
 import com.marketplace.userservice.mapper.UserMapper;
 import com.marketplace.userservice.model.Role;
@@ -37,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse registerUser(RegisterRequest request, String ip, String userAgent,String deviceId) {
 
         Role role = roleRepository.findByName(RoleType.BUYER)
-                .orElseThrow(() -> new IllegalStateException("Required role not found: " + RoleType.BUYER));
+                .orElseThrow(() -> new RoleNotFoundException("Required role not found: " + RoleType.BUYER));
 
         User user = UserMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
