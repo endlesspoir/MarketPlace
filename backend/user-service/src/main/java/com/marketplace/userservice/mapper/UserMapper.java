@@ -13,8 +13,6 @@ public class UserMapper {
 
     public static User toUser(RegisterRequest request){
 
-
-
          User user = new User()
                 .setFirstName(request.getFirstName())
                 .setLastName(request.getLastName())
