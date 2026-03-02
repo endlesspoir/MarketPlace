@@ -32,5 +32,3 @@ docker/*.log
 *.swp
 
 
-#properties
-**/src/main/resources/application-test.yml
