@@ -3,10 +3,9 @@ package com.marketplace.userservice.controller;
 import com.marketplace.userservice.dto.SessionResponse;
 import com.marketplace.userservice.service.SessionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -22,7 +21,16 @@ public class SessionController {
         return sessionService.getSessions(id);
     }
 
+    @DeleteMapping("/{deviceId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void logout(@RequestHeader("X-User-Id") Long id,@PathVariable String deviceId) {
+         sessionService.deleteByDevicd(deviceId,id);
+    }
 
-
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void logoutAll(@RequestHeader("X-User-Id") Long id){
+        sessionService.deleteAll(id);
+    }
 
 }

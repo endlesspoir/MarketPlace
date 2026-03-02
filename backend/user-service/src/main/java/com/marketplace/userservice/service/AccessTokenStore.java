@@ -1,7 +1,7 @@
 package com.marketplace.userservice.service;
 
 
-public interface AcessTokenStore {
+public interface AccessTokenStore {
 
     void save(String accessToken, String deviceId,Long id);
 
