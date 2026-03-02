@@ -68,22 +68,22 @@ public class RefreshTokenStoreImpl implements RefreshTokenStore {
         log.info("Deleted device entry for userId={} , deviceId={}", userId,deviceId);
     }
 
-//    public void deleteAllByUserIdAnd(Long userId) {
-//        Set<String> deviceKeys = stringRedisTemplate.keys(DEVICE_KEY_PREFIX + userId + ":*");
-//        if (deviceKeys == null || deviceKeys.isEmpty()) {
-//            log.info("No devices found for userId={} to delete", userId);
-//            return;
-//        }
-//
-//        for (String deviceKey : deviceKeys) {
-//            String tokenHash = stringRedisTemplate.opsForValue().get(deviceKey);
-//            if (tokenHash != null) {
-//                redisTemplate.delete(TOKEN_KEY_PREFIX + tokenHash);
-//                log.debug("Deleted refresh token {} for userId={}", tokenHash, userId);
-//            }
-//            stringRedisTemplate.delete(deviceKey);
-//            log.debug("Deleted device key {}", deviceKey);
-//        }
-//        log.info("Deleted all refresh tokens for userId={}", userId);
-//    }
+    public void deleteAllByUserIdAnd(Long userId) {
+        Set<String> deviceKeys = stringRedisTemplate.keys(DEVICE_KEY_PREFIX + userId + ":*");
+        if (deviceKeys == null || deviceKeys.isEmpty()) {
+            log.info("No devices found for userId={} to delete", userId);
+            return;
+        }
+
+        for (String deviceKey : deviceKeys) {
+            String tokenHash = stringRedisTemplate.opsForValue().get(deviceKey);
+            if (tokenHash != null) {
+                redisTemplate.delete(TOKEN_KEY_PREFIX + tokenHash);
+                log.debug("Deleted refresh token {} for userId={}", tokenHash, userId);
+            }
+            stringRedisTemplate.delete(deviceKey);
+            log.debug("Deleted device key {}", deviceKey);
+        }
+        log.info("Deleted all refresh tokens for userId={}", userId);
+    }
 }
