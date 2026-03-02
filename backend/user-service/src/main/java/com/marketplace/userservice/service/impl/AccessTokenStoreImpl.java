@@ -1,7 +1,7 @@
 package com.marketplace.userservice.service.impl;
 
 import com.marketplace.userservice.config.JwtConfig;
-import com.marketplace.userservice.service.AcessTokenStore;
+import com.marketplace.userservice.service.AccessTokenStore;
 import com.marketplace.userservice.service.PasswordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AcessTokenStoreImpl implements AcessTokenStore {
+public class AccessTokenStoreImpl implements AccessTokenStore {
 
     private final StringRedisTemplate stringRedisTemplate;
     private static final String ACCESS_TOKEN_KEY = "auth:ac:device:";
@@ -25,14 +25,15 @@ public class AcessTokenStoreImpl implements AcessTokenStore {
         delete(deviceId,id);
         String deviceKey = ACCESS_TOKEN_KEY + id + ":" + DigestUtils.sha256Hex(deviceId);
 
-        stringRedisTemplate.opsForValue().set(deviceKey, acessToken,jwtConfig.getAccessExpiration());
+        stringRedisTemplate.opsForValue().set(deviceKey, DigestUtils.sha256Hex(acessToken),jwtConfig.getAccessExpiration());
     }
-
+    @Override
     public void delete(String deviceId, Long id) {
         String deviceKey = ACCESS_TOKEN_KEY + id + ":" + DigestUtils.sha256Hex(deviceId);
         stringRedisTemplate.delete(deviceKey);
     }
 
+    @Override
     public void deleteAllByUserId(Long id) {
         Set<String> deviceKeys = stringRedisTemplate.keys(ACCESS_TOKEN_KEY + id + ":*");
         if (deviceKeys == null||deviceKeys.isEmpty()) {
