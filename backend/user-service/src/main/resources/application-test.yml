@@ -20,9 +20,15 @@ spring:
       password: ${REDIS_PASSWORD:test123}
       timeout: ${REDIS_TIMEOUT:2000}
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 jwt:
-  access-secret: ${ACCESS_SECRET_KEY:access-secret-test}
-  refresh-secret: ${REFRESH_SECRET_KEY:refresh-secret-test}
+  access-secret: ${ACCESS_SECRET_KEY:test-secret-key-test-secret-key-test-secret-key}
+  refresh-secret: ${REFRESH_SECRET_KEY:refresh-secret-test-very-long-32chars!}
   access-expiration: ${ACCESS_EXPIRATION:15m}
   refresh-expiration: ${REFRESH_EXPIRATION:7d}
 
@@ -36,3 +42,5 @@ password:
   reset:
     frontend-url: "https://frontend.app/reset-password"
     token-ttl-minutes: 15
+storage:
+  type: s3

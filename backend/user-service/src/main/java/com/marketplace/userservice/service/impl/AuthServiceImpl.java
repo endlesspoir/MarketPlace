@@ -12,6 +12,7 @@ import com.marketplace.userservice.model.RoleType;
 import com.marketplace.userservice.model.User;
 import com.marketplace.userservice.repository.RoleRepository;
 import com.marketplace.userservice.repository.UserRepository;
+import com.marketplace.userservice.service.AcessTokenStore;
 import com.marketplace.userservice.service.AuthService;
 import com.marketplace.userservice.util.ExceptionMapper;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtServiceImpl jwtService;
     private final RefreshTokenStoreImpl refreshTokenStore;
+    private final AcessTokenStore accessTokenStore;
 
     @Override
     @Transactional
@@ -61,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent,deviceId);
+            accessTokenStore.save(accessToken, deviceId, user.getId());
             log.debug("Refresh token saved for userId={} on device [IP={}, User-Agent={},deviceId={}]", user.getId(), ip, userAgent,deviceId);
         } catch (Exception e) {
             log.error("Failed to save refresh token in Redis for userId={}", user.getId(), e);
@@ -96,6 +99,7 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             refreshTokenStore.save(refreshToken, user.getId(), ip, userAgent, deviceId);
+            accessTokenStore.save(accessToken, deviceId, user.getId());
         } catch (Exception e) {
             log.error("Failed to save refresh token in Redis for userId={}", user.getId(), e);
             throw new FileStorageException("Failed to save refresh token for user " + user.getEmail());
@@ -143,6 +147,13 @@ public class AuthServiceImpl implements AuthService {
 
         String accessToken = jwtService.generateAccessToken(user);
 
+        try {
+            accessTokenStore.save(accessToken, deviceId,user.getId());
+        }
+        catch (Exception e) {
+            log.error("Failed to rotate acess token for userId={}", user.getId(), e);
+            throw new FileStorageException("Failed to rotate acess token for user " + user.getEmail());
+        }
         return new AuthResponse()
                 .setAccessToken(accessToken)
                 .setRefreshToken(refreshToken);
