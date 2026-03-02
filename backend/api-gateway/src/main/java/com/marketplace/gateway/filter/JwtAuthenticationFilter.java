@@ -8,10 +8,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,7 +56,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
     private final JwtConfig jwtConfig;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
-
+    private final ReactiveStringRedisTemplate reactiveStringRedisTemplate;
 
     private static final String BEARER_PREFIX = "Bearer";
     private static final String USER_ID_HEADER = "X-User-Id";
@@ -73,8 +75,9 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
     );
 
-    public JwtAuthenticationFilter(JwtConfig jwtConfig) {
+    public JwtAuthenticationFilter(JwtConfig jwtConfig, ReactiveStringRedisTemplate reactiveStringRedisTemplate) {
         this.jwtConfig = jwtConfig;
+        this.reactiveStringRedisTemplate = reactiveStringRedisTemplate;
     }
 
     @Override
@@ -110,8 +113,6 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
             return chain.filter(exchange);
         }
 
-
-
         String clientIp = resolveClientIp(exchange);
         if (clientIp == null) {
             return writeError(exchange, HttpStatus.BAD_REQUEST, "Unable to determine client IP");
@@ -137,6 +138,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
                 return writeError(exchange, HttpStatus.UNAUTHORIZED, "Refresh token is not allowed for this endpoint");
             }
 
+
             Date exp = claims.getExpiration();
 
             if (exp.before(new Date())) {
@@ -145,27 +147,51 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
             List<String> roles =  claims.get("roles", List.class);
 
-            if (isMatch(ADMIN_PATHS, path) && !roles.contains("ADMIN")) {
-                log.warn("Forbidden request. userId={}, roles={}, path={}",
-                        claims.getSubject(), roles, path);
-                return writeError(exchange, HttpStatus.FORBIDDEN, "Access Denied");
-            }
+            String deviceHash = DigestUtils.sha256Hex(deviceId);
+            String redisKey = "auth:ac:device:" + claims.getSubject() + ":" + deviceHash;
 
-            ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
-                    .header(USER_ID_HEADER,claims.getSubject())
-                    .header(USER_LOGIN_HEADER, claims.get("login",String.class))
-                    .header(USER_ROLES_HEADER,String.join(",",roles))
-                    .header(USER_IP_HEADER,clientIp)
-                    .header(USER_AGENT_HEADER,userAgent)
-                    .build();
+            return reactiveStringRedisTemplate.opsForValue()
+                    .get(redisKey)
+                    .flatMap(savedToken ->
+                            {
 
-            log.info("Authenticated userId={}, login={}, roles={}, path={}",
-                    claims.getSubject(),
-                    claims.get("login", String.class),
-                    roles,
-                    path);
+                                if (savedToken == null) {
+                                    log.warn("Access token not found in Redis (revoked). userId={}, deviceId={}", claims.getSubject(), deviceId);
+                                    return writeError(exchange, HttpStatus.UNAUTHORIZED, "Token revoked");
+                                }
 
-            return chain.filter(exchange.mutate().request(modifiedRequest).build());
+                                if (!savedToken.equals(token)) {
+                                    log.warn("Access token mismatch in Redis. userId={}, deviceId={}", claims.getSubject(), deviceId);
+                                    return writeError(exchange, HttpStatus.UNAUTHORIZED, "Token revoked");
+                                }
+
+
+
+                                if (isMatch(ADMIN_PATHS, path) && !roles.contains("ADMIN")) {
+                                    log.warn("Forbidden request. userId={}, roles={}, path={}", claims.getSubject(), roles, path);
+                                    return writeError(exchange, HttpStatus.FORBIDDEN, "Access Denied");
+                                }
+
+                                ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
+                                        .header(USER_ID_HEADER, claims.getSubject())
+                                        .header(USER_LOGIN_HEADER, claims.get("login", String.class))
+                                        .header(USER_ROLES_HEADER, String.join(",", roles))
+                                        .header(USER_IP_HEADER, clientIp)
+                                        .header(USER_AGENT_HEADER, userAgent)
+                                        .build();
+
+                                log.info("Authenticated userId={}, login={}, roles={}, path={}",
+                                        claims.getSubject(),
+                                        claims.get("login", String.class),
+                                        roles,
+                                        path
+                                );
+
+                                return chain.filter(exchange.mutate().request(modifiedRequest).build());
+                            }
+                    );
+
+
 
         } catch (ExpiredJwtException e) {
             log.warn("Expired JWT for path {}: {}", path, e.getMessage());

@@ -4,6 +4,10 @@ spring:
       httpclient:
         connect-timeout: 2000
         response-timeout: 2s
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 jwt:
   secret: "test-secret-key-test-secret-key-test-secret-key"
