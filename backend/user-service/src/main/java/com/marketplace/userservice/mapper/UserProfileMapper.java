@@ -18,6 +18,7 @@ public class UserProfileMapper {
 
 
         return new UserProfileResponse()
+                .setId(user.getId())
                 .setFirstName(user.getFirstName())
                 .setLastName(user.getLastName())
                 .setEmail(user.getEmail())
