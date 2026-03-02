@@ -12,6 +12,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -85,5 +87,33 @@ public class RefreshTokenStoreImpl implements RefreshTokenStore {
             log.debug("Deleted device key {}", deviceKey);
         }
         log.info("Deleted all refresh tokens for userId={}", userId);
+    }
+
+    public List<RefreshTokenMeta> getAll(Long userId) {
+        Set<String> deviceKeys = stringRedisTemplate.keys(DEVICE_KEY_PREFIX + userId + ":*");
+
+        if (deviceKeys == null || deviceKeys.isEmpty()) {
+            log.info("No refresh tokens found for userId={}", userId);
+            return List.of();
+        }
+
+        List<RefreshTokenMeta> result = new ArrayList<>();
+
+        for (String deviceKey : deviceKeys) {
+            String tokenHash = stringRedisTemplate.opsForValue().get(deviceKey);
+            if (tokenHash == null) {
+                continue;
+            }
+
+            RefreshTokenMeta meta = redisTemplate.opsForValue()
+                    .get(TOKEN_KEY_PREFIX + tokenHash);
+
+            if (meta != null) {
+                result.add(meta);
+            }
+        }
+
+        log.info("Found {} refresh tokens for userId={}", result.size(), userId);
+        return result;
     }
 }
