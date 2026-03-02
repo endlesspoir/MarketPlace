@@ -9,6 +9,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -29,5 +31,17 @@ public class AcessTokenStoreImpl implements AcessTokenStore {
     public void delete(String deviceId, Long id) {
         String deviceKey = ACCESS_TOKEN_KEY + id + ":" + DigestUtils.sha256Hex(deviceId);
         stringRedisTemplate.delete(deviceKey);
+    }
+
+    public void deleteAllByUserId(Long id) {
+        Set<String> deviceKeys = stringRedisTemplate.keys(ACCESS_TOKEN_KEY + id + ":*");
+        if (deviceKeys == null||deviceKeys.isEmpty()) {
+            log.info(" No devices found for userId={} to delete", id);
+            return;
+        }
+        for (String deviceKey : deviceKeys) {
+            stringRedisTemplate.delete(deviceKey);
+            log.info("Deleted device key {}", deviceKey);
+        }
     }
 }
