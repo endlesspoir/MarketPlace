@@ -30,6 +30,7 @@ public class RefreshTokenStoreImpl implements RefreshTokenStore {
     private static final String TOKEN_KEY_PREFIX = "auth:rt:token:";
     private static final String DEVICE_KEY_PREFIX = "auth:rt:device:";
 
+    @Override
     public void save(String refreshToken, Long userId, String ip, String userAgent,String deviceId) {
         String deviceHash = DigestUtils.sha256Hex(deviceId);
 
@@ -57,7 +58,7 @@ public class RefreshTokenStoreImpl implements RefreshTokenStore {
         log.debug("Retrieved refresh token meta: {}", meta);
         return meta;
     }
-
+    @Override
     public void deleteByDevice( Long userId,String deviceId) {
         String deviceHash = DigestUtils.sha256Hex(deviceId);
         String tokenHash = stringRedisTemplate.opsForValue().get(DEVICE_KEY_PREFIX + userId + ":" + deviceHash);
@@ -69,8 +70,8 @@ public class RefreshTokenStoreImpl implements RefreshTokenStore {
         stringRedisTemplate.delete(DEVICE_KEY_PREFIX + userId + ":" + deviceHash);
         log.info("Deleted device entry for userId={} , deviceId={}", userId,deviceId);
     }
-
-    public void deleteAllByUserIdAnd(Long userId) {
+    @Override
+    public void deleteAllByUserId(Long userId) {
         Set<String> deviceKeys = stringRedisTemplate.keys(DEVICE_KEY_PREFIX + userId + ":*");
         if (deviceKeys == null || deviceKeys.isEmpty()) {
             log.info("No devices found for userId={} to delete", userId);
@@ -88,7 +89,7 @@ public class RefreshTokenStoreImpl implements RefreshTokenStore {
         }
         log.info("Deleted all refresh tokens for userId={}", userId);
     }
-
+    @Override
     public List<RefreshTokenMeta> getAll(Long userId) {
         Set<String> deviceKeys = stringRedisTemplate.keys(DEVICE_KEY_PREFIX + userId + ":*");
 
@@ -115,5 +116,14 @@ public class RefreshTokenStoreImpl implements RefreshTokenStore {
 
         log.info("Found {} refresh tokens for userId={}", result.size(), userId);
         return result;
+    }
+
+    @Override
+    public boolean hasSession(Long userId, String deviceId) {
+        String deviceHash = DigestUtils.sha256Hex(deviceId);
+        String deviceKey = DEVICE_KEY_PREFIX + userId + ":" + deviceHash;
+
+        // Проверяем наличие токена в Redis
+        return stringRedisTemplate.hasKey(deviceKey);
     }
 }

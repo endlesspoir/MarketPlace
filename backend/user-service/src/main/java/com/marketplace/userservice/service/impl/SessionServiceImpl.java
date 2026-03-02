@@ -36,14 +36,19 @@ public class SessionServiceImpl implements SessionService {
 
     }
 
-    public void deleteByDevicd(String deviceId,Long id) {
+    @Override
+    public void deleteByDevice(String deviceId,Long id) {
+
+        if (!refreshTokenStore.hasSession(id, deviceId)) {
+            throw new SessionNotFoundException("Session with id " + id + " not found");
+        }
         refreshTokenStore.deleteByDevice(id, deviceId);
         accessTokenStore.delete(deviceId, id);
     }
 
     @Override
     public void deleteAll(Long id) {
-        refreshTokenStore.deleteAllByUserIdAnd(id);
+        refreshTokenStore.deleteAllByUserId(id);
         accessTokenStore.deleteAllByUserId(id);
     }
 

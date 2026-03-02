@@ -27,12 +27,13 @@ public class AccessTokenStoreImpl implements AccessTokenStore {
 
         stringRedisTemplate.opsForValue().set(deviceKey, DigestUtils.sha256Hex(acessToken),jwtConfig.getAccessExpiration());
     }
-
+    @Override
     public void delete(String deviceId, Long id) {
         String deviceKey = ACCESS_TOKEN_KEY + id + ":" + DigestUtils.sha256Hex(deviceId);
         stringRedisTemplate.delete(deviceKey);
     }
 
+    @Override
     public void deleteAllByUserId(Long id) {
         Set<String> deviceKeys = stringRedisTemplate.keys(ACCESS_TOKEN_KEY + id + ":*");
         if (deviceKeys == null||deviceKeys.isEmpty()) {

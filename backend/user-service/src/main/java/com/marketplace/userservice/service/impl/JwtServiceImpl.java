@@ -34,6 +34,7 @@ public class JwtServiceImpl implements JwtService {
                 jwtConfig.getRefreshExpiration().toDays());
     }
 
+
     private String generateToken(User user, long ttlMs, String type, SecretKey secret) {
         Instant now = Instant.now();
 
@@ -50,11 +51,11 @@ public class JwtServiceImpl implements JwtService {
         log.debug("Generated {} token for userId={}", type, user.getId());
         return token;
     }
-
+    @Override
     public String generateRefreshToken(User user) {
         return generateToken(user, jwtConfig.getRefreshExpiration().toMillis(), "refresh", refreshKey);
     }
-
+    @Override
     public String generateAccessToken(User user) {
         return generateToken(user, jwtConfig.getAccessExpiration().toMillis(), "access", accessKey);
     }

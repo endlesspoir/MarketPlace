@@ -13,6 +13,7 @@ import com.marketplace.userservice.model.User;
 import com.marketplace.userservice.repository.RoleRepository;
 import com.marketplace.userservice.repository.UserRepository;
 import com.marketplace.userservice.service.AuthService;
+import com.marketplace.userservice.service.JwtService;
 import com.marketplace.userservice.util.ExceptionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtServiceImpl jwtService;
+    private final JwtService jwtService;
     private final RefreshTokenStoreImpl refreshTokenStore;
     private final AccessTokenStoreImpl accessTokenStore;
 

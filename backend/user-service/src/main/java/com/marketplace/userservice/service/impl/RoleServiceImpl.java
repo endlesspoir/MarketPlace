@@ -54,6 +54,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Transactional
+    @Override
     public Set<RoleResponse> updateUserRoles(Long id,UpdateRoleRequest updateRoleRequest) {
 
         log.debug("updateUserRoles called with updateRoleRequest {}", updateRoleRequest);
