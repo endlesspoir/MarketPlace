@@ -27,9 +27,9 @@ public class PasswordController {
     @Operation(
             summary = "Change password for logged-in user",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Password changed successfully"),
-                    @ApiResponse(responseCode = "400", description = "Invalid current or new password"),
-                    @ApiResponse(responseCode = "404", description = "User not found")
+                    @ApiResponse(responseCode = "200", description = "Password changed successfully",content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Invalid current or new password",content = @Content),
+                    @ApiResponse(responseCode = "404", description = "User not found",content = @Content)
             }
     )
     @PostMapping("change")
@@ -43,9 +43,9 @@ public class PasswordController {
             summary = "Request password reset",
             description = "Generates a reset token and sends a reset link to the user's email",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Password reset token sent successfully"),
-                    @ApiResponse(responseCode = "404", description = "User not found"),
-                    @ApiResponse(responseCode = "500", description = "Failed to process password reset")
+                    @ApiResponse(responseCode = "200", description = "Password reset token sent successfully",content = @Content),
+                    @ApiResponse(responseCode = "404", description = "User not found",content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Failed to process password reset",content = @Content)
             }
     )
     @PostMapping("forgot")
@@ -58,10 +58,10 @@ public class PasswordController {
             summary = "Reset password using token",
             description = "Allows the user to reset password using a valid reset token",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Password reset successfully"),
-                    @ApiResponse(responseCode = "400", description = "Invalid token or new password"),
-                    @ApiResponse(responseCode = "404", description = "User not found"),
-                    @ApiResponse(responseCode = "500", description = "Failed to delete token or process reset")
+                    @ApiResponse(responseCode = "200", description = "Password reset successfully",content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Invalid token or new password",content = @Content),
+                    @ApiResponse(responseCode = "404", description = "User not found",content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Failed to delete token or process reset",content = @Content)
             }
     )
     @PostMapping("reset")

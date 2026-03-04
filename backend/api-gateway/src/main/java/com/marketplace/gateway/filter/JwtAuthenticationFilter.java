@@ -160,7 +160,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
                                     return writeError(exchange, HttpStatus.UNAUTHORIZED, "Token revoked");
                                 }
 
-                                if (!savedToken.equals(token)) {
+                                if (!savedToken.equals(DigestUtils.sha256Hex(token))) {
                                     log.warn("Access token mismatch in Redis. userId={}, deviceId={}", claims.getSubject(), deviceId);
                                     return writeError(exchange, HttpStatus.UNAUTHORIZED, "Token revoked");
                                 }

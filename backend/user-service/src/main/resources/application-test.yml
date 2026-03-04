@@ -41,6 +41,6 @@ amazon:
 password:
   reset:
     frontend-url: "https://frontend.app/reset-password"
-    token-ttl-minutes: 15
+    reset-token-ttl: 15m
 storage:
   type: s3

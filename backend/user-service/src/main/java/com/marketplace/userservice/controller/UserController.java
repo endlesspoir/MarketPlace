@@ -27,7 +27,8 @@ public class UserController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfully retrieved user profile",
                             content = @Content(schema = @Schema(implementation = UserProfileResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "User not found")
+                    @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)
             }
     )
     @GetMapping("me")
@@ -41,9 +42,12 @@ public class UserController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Profile updated successfully",
                             content = @Content(schema = @Schema(implementation = UserProfileResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Validation failed (invalid field values)"),
-                    @ApiResponse(responseCode = "404", description = "User not found"),
-                    @ApiResponse(responseCode = "409", description = "Login or email already exists")
+                    @ApiResponse(responseCode = "400", description = "Validation failed (invalid field values)",
+                    content = @Content),
+                    @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content),
+                    @ApiResponse(responseCode = "409", description = "Login or email already exists",
+                    content = @Content)
             }
     )
     @PatchMapping("me")
@@ -58,8 +62,10 @@ public class UserController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfully retrieved public profile",
                             content = @Content(schema = @Schema(implementation = UserPublicProfileResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "User not found"),
-                    @ApiResponse(responseCode = "404", description = "Public profile not available (user is not a seller)")
+                    @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content),
+                    @ApiResponse(responseCode = "404", description = "Public profile not available (user is not a seller)",
+                    content = @Content)
             }
     )
     @GetMapping()
@@ -73,8 +79,10 @@ public class UserController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Avatar updated or deleted successfully",
                             content = @Content(schema = @Schema(implementation = UserProfileResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "User not found"),
-                    @ApiResponse(responseCode = "500", description = "Failed to upload file to storage")
+                    @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Failed to upload file to storage",
+                    content = @Content)
             }
     )
     @PostMapping("me/avatar")

@@ -15,7 +15,7 @@ public class RabitEventPublisherImpl implements RabitEventPublisher {
     @Override
     public void publishResetPassword(String email, String link,String login) {
         rabbitTemplate.convertAndSend(
-                "password.exchange",
+                "passwordExchange",
                 "password.reset",
                 new PasswordResetEvent().setEmail(email).setToken(link).setLogin(login)
         );

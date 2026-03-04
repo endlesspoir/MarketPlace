@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class RoleController {
 
@@ -53,11 +53,12 @@ public class RoleController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "User with the specified ID not found"
+                            description = "User with the specified ID not found",
+                            content = @Content
                     )
             }
     )
-    @GetMapping("/users/{userId}/roles")
+    @GetMapping("/{userId}/roles")
     public Set<RoleResponse> getUserRoles(
             @Parameter(description = "ID of the user", required = true)
             @PathVariable Long userId) {
@@ -77,15 +78,17 @@ public class RoleController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "User or role not found"
+                            description = "User or role not found",
+                            content = @Content
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "Invalid request format or empty roles list"
+                            description = "Invalid request format or empty roles list",
+                            content = @Content
                     )
             }
     )
-    @PatchMapping("/users/{userId}/roles")
+    @PatchMapping("/{userId}/roles")
     public Set<RoleResponse> updateUserRoles(
             @Parameter(description = "ID of the user", required = true)
             @PathVariable Long userId,

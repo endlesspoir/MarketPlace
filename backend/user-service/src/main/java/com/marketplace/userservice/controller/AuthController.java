@@ -33,8 +33,8 @@ public class AuthController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "User registered successfully",
                             content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Invalid input data"),
-                    @ApiResponse(responseCode = "409", description = "UserAlredyExist")
+                    @ApiResponse(responseCode = "400", description = "Invalid input data",content = @Content),
+                    @ApiResponse(responseCode = "409", description = "UserAlredyExist",content = @Content),
             }
     )
     @PostMapping("/register")
@@ -58,8 +58,8 @@ public class AuthController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Login successful",
                             content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-                    @ApiResponse(responseCode = "401", description = "Invalid credentials"),
-                    @ApiResponse(responseCode = "404",description = "User Not Found")
+                    @ApiResponse(responseCode = "401", description = "Invalid credentials",content = @Content),
+                @ApiResponse(responseCode = "404",description = "User Not Found",content = @Content),
             }
     )
     @PostMapping("/login")
@@ -80,7 +80,7 @@ public class AuthController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Token refreshed",
                             content = @Content(schema = @Schema(implementation = AuthResponse.class))),
-                    @ApiResponse(responseCode = "401", description = "Invalid refresh token")
+                    @ApiResponse(responseCode = "401", description = "Invalid refresh token",content = @Content),
             }
     )
     @PostMapping("/refresh")

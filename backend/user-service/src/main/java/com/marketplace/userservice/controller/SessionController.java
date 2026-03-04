@@ -3,6 +3,7 @@ package com.marketplace.userservice.controller;
 import com.marketplace.userservice.dto.SessionResponse;
 import com.marketplace.userservice.service.SessionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,8 +27,9 @@ public class SessionController {
             description = "Returns a list of all active sessions (devices) for the current user.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfully retrieved active sessions",
-                            content = @Content(schema = @Schema(implementation = SessionResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "No active sessions found for the user")
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = SessionResponse.class)))),
+                    @ApiResponse(responseCode = "404", description = "No active sessions found for the user",
+                    content = @Content)
             }
     )
     @GetMapping
