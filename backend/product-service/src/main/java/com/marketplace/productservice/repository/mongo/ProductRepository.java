@@ -1,4 +1,4 @@
-package com.marketplace.productservice.reposiroty.mongo;
+package com.marketplace.productservice.repository.mongo;
 
 import com.marketplace.productservice.model.Product;
 import com.marketplace.productservice.model.ProductStatus;

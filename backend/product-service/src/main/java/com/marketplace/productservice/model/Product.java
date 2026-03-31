@@ -44,8 +44,6 @@ public class Product {
     @DecimalMin("0.0")
     private BigDecimal price;
 
-    @NotBlank
-    private String currency;
 
     @NotBlank
     @Indexed
