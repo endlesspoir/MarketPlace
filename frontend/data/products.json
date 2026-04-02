@@ -1,0 +1,20 @@
+{
+  "content": [
+    { "id": "1", "name": "Pet Carrier", "description": "Carrier", "price": 54.99, "imagesUrl": ["img/1.jpg"], "averageRating": 4.5 },
+    { "id": "2", "name": "Chew Ball", "description": "Toy", "price": 15.99, "imagesUrl": ["img/2.jpg"], "averageRating": 5 },
+    { "id": "3", "name": "Scratching Post", "description": "Cat toy", "price": 89.99, "imagesUrl": ["img/3.jpg"], "averageRating": 4.7 },
+    { "id": "4", "name": "Pet Bed", "description": "Soft bed", "price": 69.99, "imagesUrl": ["img/4.jpg"], "averageRating": 4.2 },
+    { "id": "5", "name": "Dog Bowl", "description": "Steel bowl", "price": 24.99, "imagesUrl": ["img/5.jpg"], "averageRating": 5 },
+    { "id": "6", "name": "Dog Leash", "description": "Leash", "price": 32.99, "imagesUrl": ["img/6.jpg"], "averageRating": 4.3 },
+    { "id": "7", "name": "Auto Feeder", "description": "Smart feeder", "price": 120, "imagesUrl": ["img/7.jpg"], "averageRating": 4.8 },
+    { "id": "8", "name": "Grooming Kit", "description": "Kit", "price": 39.99, "imagesUrl": ["img/8.jpg"], "averageRating": 4.6 },
+    { "id": "9", "name": "Blanket", "description": "Warm", "price": 45.5, "imagesUrl": ["img/9.jpg"], "averageRating": 4.4 },
+    { "id": "10", "name": "Clicker", "description": "Training", "price": 9.99, "imagesUrl": ["img/10.jpg"], "averageRating": 4.1 },
+    { "id": "11", "name": "Tunnel", "description": "Cat tunnel", "price": 22.99, "imagesUrl": ["img/11.jpg"], "averageRating": 4.5 },
+    { "id": "12", "name": "Bottle", "description": "Water bottle", "price": 18.99, "imagesUrl": ["img/12.jpg"], "averageRating": 4.7 },
+    { "id": "13", "name": "Seat Cover", "description": "Car cover", "price": 49.99, "imagesUrl": ["img/13.jpg"], "averageRating": 4.3 },
+    { "id": "14", "name": "Raincoat", "description": "Dog coat", "price": 27.5, "imagesUrl": ["img/14.jpg"], "averageRating": 4.2 },
+    { "id": "15", "name": "LED Collar", "description": "Glow collar", "price": 19.99, "imagesUrl": ["img/15.jpg"], "averageRating": 4.6 }
+  ],
+  "totalElements": 15
+}
