@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>PawsStore</title>
+
+
+  <link rel="stylesheet" href="./css/header.css">
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/footer.css">
+</head>
+
+<body>
+
+  <header class="header">
+    <a href="./index.html" class="logo">
+      <div class="logo-icon">
+        <img src="svg/paw.svg" alt="PawsStore">
+      </div>
+      <span class="logo-text">PawsStore</span>
+    </a>
+
+    <nav>
+      <a href="#">Shop</a>
+      <a href="#">Categories</a>
+      <a href="#">Deals</a>
+      <a href="#">About</a>
+    </nav>
+
+    <div class="actions">
+      <button class="search-btn">
+        <img src="svg/search.svg" alt="Поиск">
+      </button>
+      <div class="cart">
+        <a href="./cart.html" class="cart__link">
+          <img src="svg/cart.svg" alt="Корзина">
+          <span class="cart__count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Shop All Products</h1>
+    <p>Discover the best products for your furry friends</p>
+  </section>
+
+  <main>
+    <div class="filters-toolbar">
+      <aside class="sidebar">
+        <h3>Filters</h3>
+
+        <p>Rating</p>
+
+        <div class="rating-variants-list">
+
+       <label class="rating-variant-label">
+  <input type="checkbox" onchange="applyRating(5, this.checked)"> 5+ Stars
+</label>
+
+<label class="rating-variant-label">
+  <input type="checkbox" onchange="applyRating(4, this.checked)"> 4+ Stars
+</label>
+
+<label class="rating-variant-label">
+  <input type="checkbox" onchange="applyRating(3, this.checked)"> 3+ Stars
+</label>
+        </div>
+
+        <p>Price Range</p>
+        <div class="price-inputs">
+          <input id="min" placeholder="$ 0">
+          <input id="max" placeholder="$ 100">
+        </div>
+        <button onclick="applyPrice()">Apply</button>
+      </aside>
+    </div>
+
+    <div class="content">
+      <aside class="sorting-count-bar">
+        <span class="shown-items-count">6 Elements</span>
+
+        <select class="sorting-select" onchange="sortProducts(this.value)">
+          <option value="az">Name (A-Z)</option>
+          <option value="za">Name (Z-A)</option>
+          <option value="price-asc">Price ↑</option>
+          <option value="price-desc">Price ↓</option>
+        </select>
+      </aside>
+      <div class="catalog"></div>
+    </div>
+  </main>
+
+    <footer class="footer">
+    <div class="footer-container">
+      
+      <div class="footer-grid">
+        
+        
+        <div class="footer-brand">
+          <div class="brand-name">
+            <i class="fas fa-paw"></i>
+            <span>PawsStore</span>
+          </div>
+          <div class="brand-tagline">
+            Your trusted source for premium pet supplies and accessories.
+          </div>
+        </div>
+
+      
+        <div>
+          <h3 class="footer-heading">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Shop All</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> New Arrivals</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Best Sellers</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Sale Items</a></li>
+          </ul>
+        </div>
+
+        
+        <div>
+          <h3 class="footer-heading">Customer Service</h3>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Shipping Info</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Returns Policy</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+          </ul>
+        </div>
+
+        
+        <div>
+          <h3 class="footer-heading">Newsletter</h3>
+          <p class="newsletter-text">Subscribe to get special offers and updates.</p>
+          <div class="newsletter-form">
+            <div class="input-icon-wrapper">
+              <i class="fas fa-envelope email-icon"></i>   
+              <input type="email" placeholder="Your email address" aria-label="Email for newsletter">
+            </div>
+            <button class="send-btn" id="newsletterSendBtn">
+              <i class="fas fa-paper-plane"></i> Send    
+            </button>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="footer-bottom">
+        <div class="copyright">
+          <i class="far fa-copyright"></i>
+          <span>2026 PawsStore. All rights reserved.</span>
+        </div>
+        <div class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Accessibility</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script type="module">
+    import { initCatalog } from "./js/catalog.js";
+    initCatalog();
+  </script>
+</body>
+</html>
