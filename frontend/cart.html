@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart | PawsStore</title>
+  <link rel="stylesheet" href="./css/header.css">
+  <link rel="stylesheet" href="./css/footer.css">
+  <link rel="stylesheet" href="./css/cart.css">
+</head>
+<body>
+  <header class="header">
+    <a href="./index.html" class="logo">
+      <div class="logo-icon">
+        <img src="svg/paw.svg" alt="PawsStore">
+      </div>
+      <span class="logo-text">PawsStore</span>
+    </a>
+
+    <nav>
+      <a href="#">Shop</a>
+      <a href="#">Categories</a>
+      <a href="#">Deals</a>
+      <a href="#">About</a>
+    </nav>
+
+    <div class="actions">
+      <button class="search-btn" type="button">
+        <img src="svg/search.svg" alt="Поиск">
+      </button>
+      <div class="cart">
+        <a href="./cart.html" class="cart__link">
+          <img src="svg/cart.svg" alt="Корзина">
+          <span class="cart__count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="cart-page" id="cart-page"></main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-name"><span>PawsStore</span></div>
+          <div class="brand-tagline">Your trusted source for premium pet supplies and accessories.</div>
+        </div>
+
+        <div>
+          <h3 class="footer-heading">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="#">Shop All</a></li>
+            <li><a href="#">New Arrivals</a></li>
+            <li><a href="#">Best Sellers</a></li>
+            <li><a href="#">Sale Items</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="footer-heading">Customer Service</h3>
+          <ul class="footer-links">
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Shipping Info</a></li>
+            <li><a href="#">Returns Policy</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="footer-heading">Newsletter</h3>
+          <p class="newsletter-text">Subscribe to get special offers and updates.</p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Your email" aria-label="Email for newsletter">
+            <button class="send-btn" type="button">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="copyright"><span>2026 PawsStore. All rights reserved.</span></div>
+        <div class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Accessibility</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="./js/cart.js"></script>
+</body>
+</html>
+

@@ -78,6 +78,9 @@ public class User {
     )
     private Set<Role> roles;
 
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

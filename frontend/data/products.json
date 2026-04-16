@@ -1,20 +1,113 @@
 {
   "content": [
-    { "id": "1", "name": "Pet Carrier", "description": "Carrier", "price": 54.99, "imagesUrl": ["img/1.jpg"], "averageRating": 4.5 },
-    { "id": "2", "name": "Chew Ball", "description": "Toy", "price": 15.99, "imagesUrl": ["img/2.jpg"], "averageRating": 5 },
-    { "id": "3", "name": "Scratching Post", "description": "Cat toy", "price": 89.99, "imagesUrl": ["img/3.jpg"], "averageRating": 4.7 },
-    { "id": "4", "name": "Pet Bed", "description": "Soft bed", "price": 69.99, "imagesUrl": ["img/4.jpg"], "averageRating": 4.2 },
-    { "id": "5", "name": "Dog Bowl", "description": "Steel bowl", "price": 24.99, "imagesUrl": ["img/5.jpg"], "averageRating": 5 },
-    { "id": "6", "name": "Dog Leash", "description": "Leash", "price": 32.99, "imagesUrl": ["img/6.jpg"], "averageRating": 4.3 },
-    { "id": "7", "name": "Auto Feeder", "description": "Smart feeder", "price": 120, "imagesUrl": ["img/7.jpg"], "averageRating": 4.8 },
-    { "id": "8", "name": "Grooming Kit", "description": "Kit", "price": 39.99, "imagesUrl": ["img/8.jpg"], "averageRating": 4.6 },
-    { "id": "9", "name": "Blanket", "description": "Warm", "price": 45.5, "imagesUrl": ["img/9.jpg"], "averageRating": 4.4 },
-    { "id": "10", "name": "Clicker", "description": "Training", "price": 9.99, "imagesUrl": ["img/10.jpg"], "averageRating": 4.1 },
-    { "id": "11", "name": "Tunnel", "description": "Cat tunnel", "price": 22.99, "imagesUrl": ["img/11.jpg"], "averageRating": 4.5 },
-    { "id": "12", "name": "Bottle", "description": "Water bottle", "price": 18.99, "imagesUrl": ["img/12.jpg"], "averageRating": 4.7 },
-    { "id": "13", "name": "Seat Cover", "description": "Car cover", "price": 49.99, "imagesUrl": ["img/13.jpg"], "averageRating": 4.3 },
-    { "id": "14", "name": "Raincoat", "description": "Dog coat", "price": 27.5, "imagesUrl": ["img/14.jpg"], "averageRating": 4.2 },
-    { "id": "15", "name": "LED Collar", "description": "Glow collar", "price": 19.99, "imagesUrl": ["img/15.jpg"], "averageRating": 4.6 }
+    {
+      "id": "1",
+      "name": "Airline-Approved Pet Travel Carrier",
+      "description": "Soft-sided pet carrier approved for airline cabin use. Features mesh panels for ventilation, padded shoulder strap, and collapsible design for easy storage. Interior fleece pad provides comfort. Meets TSA requirements for in-cabin pet travel.",
+      "price": 54.99,
+      "imagesUrl": ["img/1.png"],
+      "averageRating": 4,
+      "dimensions": "18 x 11 x 11 inches",
+      "material": "Polyester with Mesh Panels",
+      "weightLimit": "Up to 15 lbs",
+      "airlineApproved": "Yes (TSA Compliant)",
+      "features": "Collapsible, Padded Strap, Fleece Pad, Mesh Panels",
+      "keyHighlights": [
+        "Dimensions: 18 x 11 x 11 inches",
+        "Material: Polyester with Mesh Panels",
+        "Weight Limit: Up to 15 lbs"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Interactive Rubber Chew Ball",
+      "description": "Durable rubber chew ball designed for aggressive chewers. Features textured surface for dental health and can be filled with treats for extended playtime. Bounces unpredictably for exciting fetch games. Non-toxic, BPA-free rubber material.",
+      "price": 15.99,
+      "imagesUrl": ["img/2.png"],
+      "averageRating": 5,
+      "diameter": "3.5 inches",
+      "material": "Natural Rubber",
+      "treatCompartment": "Yes",
+      "safety": "BPA-Free, Non-Toxic",
+      "suitableFor": "All Dog Sizes",
+      "keyHighlights": [
+        "Diameter: 3.5 inches",
+        "Material: Natural Rubber",
+        "Treat Compartment: Yes"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Multi-Level Cat Scratching Post",
+      "description": "Three-tier cat scratching post with sisal rope wrapping and plush platforms. Provides multiple levels for climbing, scratching, and resting. Sturdy base ensures stability during active play. Natural jute fibers satisfy your cat's scratching instincts.",
+      "price": 89.99,
+      "imagesUrl": ["img/3.png"],
+      "averageRating": 4.5,
+      "height": "38 inches",
+      "baseDimensions": "20 x 20 inches",
+      "material": "Sisal Rope & Plush Fabric",
+      "platforms": "3 Levels",
+      "weightCapacity": "Up to 25 lbs per platform",
+      "keyHighlights": [
+        "Height: 38 inches",
+        "Base Dimensions: 20 x 20 inches",
+        "Material: Sisal Rope & Plush Fabric"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Orthopedic Memory Foam Pet Bed",
+      "description": "Luxurious memory foam pet bed with removable, machine-washable cover. Provides superior support for senior pets and those with joint issues. Water-resistant liner protects the foam core. Available in multiple sizes to fit all breeds.",
+      "price": 69.99,
+      "imagesUrl": ["img/4.png"],
+      "averageRating": 3.5,
+      "size": "Large (40 x 28 inches)",
+      "foamThickness": "4 inches",
+      "coverMaterial": "Microfiber",
+      "washing": "Machine Washable Cover",
+      "weight": "8 lbs",
+      "keyHighlights": [
+        "Size: Large (40 x 28 inches)",
+        "Foam Thickness: 4 inches",
+        "Cover Material: Microfiber"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Premium Stainless Steel Dog Bowl",
+      "description": "Durable stainless steel dog bowl designed for medium to large breeds. Non-slip rubber base prevents sliding and spillage. Dishwasher safe and rust-resistant for long-lasting use. Perfect for both food and water.",
+      "price": 24.99,
+      "imagesUrl": ["img/5.png"],
+      "averageRating": 5,
+      "material": "Stainless Steel",
+      "capacity": "64 oz (1.9 L)",
+      "diameter": "8.5 inches",
+      "care": "Dishwasher Safe",
+      "weight": "1.2 lbs",
+      "keyHighlights": [
+        "Material: Stainless Steel",
+        "Capacity: 64 oz (1.9 L)",
+        "Diameter: 8.5 inches"
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Reflective Nylon Dog Leash & Collar Set",
+      "description": "High-visibility reflective dog leash and collar set perfect for evening walks. Durable nylon construction with reinforced stitching. Quick-release buckle and adjustable sizing for a perfect fit. Includes sturdy metal D-ring for tag attachment.",
+      "price": 32.99,
+      "imagesUrl": ["img/6.png"],
+      "averageRating": 4,
+      "leashLength": "6 feet",
+      "material": "Nylon with Reflective Stitching",
+      "collarSize": "Adjustable 14–20 inches",
+      "hardware": "Metal D-ring & Clasp",
+      "suitableFor": "Medium to Large Dogs",
+      "keyHighlights": [
+        "Leash Length: 6 feet",
+        "Material: Nylon with Reflective Stitching",
+        "Collar Size: Adjustable 14–20 inches"
+      ]
+    }
   ],
-  "totalElements": 15
+  "totalElements": 6
 }
