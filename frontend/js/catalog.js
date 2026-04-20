@@ -148,14 +148,14 @@ function renderProducts(list) {
       window.location.href = `./product.html?id=${encodeURIComponent(p.id)}`;
     };
 
-    const imageNode = item.querySelector(".product_item_image_container img");
-    const nameNode = item.querySelector(".product_name");
-    const hoverTitleNode = item.querySelector(".product_title");
     const addBtn = item.querySelector(".cart_btn");
 
-    imageNode?.addEventListener("click", openProduct);
-    nameNode?.addEventListener("click", openProduct);
-    hoverTitleNode?.addEventListener("click", openProduct);
+    item.addEventListener("click", event => {
+      if (event.target.closest(".cart_btn")) {
+        return;
+      }
+      openProduct();
+    });
 
     addBtn?.addEventListener("click", event => {
       event.stopPropagation();
