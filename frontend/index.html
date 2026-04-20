@@ -52,41 +52,55 @@
         <h3>Filters</h3>
 
         <p>Rating</p>
-
         <div class="rating-variants-list">
+          <label class="rating-variant-label">
+            <input type="checkbox" onchange="applyRating(5, this.checked)">
+            <span>5+ Stars</span>
+          </label>
 
-       <label class="rating-variant-label">
-  <input type="checkbox" onchange="applyRating(5, this.checked)"> 5+ Stars
-</label>
+          <label class="rating-variant-label">
+            <input type="checkbox" onchange="applyRating(4, this.checked)">
+            <span>4+ Stars</span>
+          </label>
 
-<label class="rating-variant-label">
-  <input type="checkbox" onchange="applyRating(4, this.checked)"> 4+ Stars
-</label>
-
-<label class="rating-variant-label">
-  <input type="checkbox" onchange="applyRating(3, this.checked)"> 3+ Stars
-</label>
+          <label class="rating-variant-label">
+            <input type="checkbox" onchange="applyRating(3, this.checked)">
+            <span>3+ Stars</span>
+          </label>
         </div>
 
         <p>Price Range</p>
         <div class="price-inputs">
-          <input id="min" placeholder="$ 0">
-          <input id="max" placeholder="$ 100">
+          <div class="price-field">
+            <label for="min">Min</label>
+            <div class="price-input-wrap">
+              <span>$</span>
+              <input id="min" type="number" min="0" placeholder="0" oninput="applyPrice()">
+            </div>
+          </div>
+          <div class="price-field">
+            <label for="max">Max</label>
+            <div class="price-input-wrap">
+              <span>$</span>
+              <input id="max" type="number" min="0" placeholder="100" oninput="applyPrice()">
+            </div>
+          </div>
         </div>
-        <button onclick="applyPrice()">Apply</button>
       </aside>
     </div>
 
     <div class="content">
       <aside class="sorting-count-bar">
-        <span class="shown-items-count">6 Elements</span>
-
-        <select class="sorting-select" onchange="sortProducts(this.value)">
-          <option value="az">Name (A-Z)</option>
-          <option value="za">Name (Z-A)</option>
-          <option value="price-asc">Price ↑</option>
-          <option value="price-desc">Price ↓</option>
-        </select>
+        <span class="shown-items-count">6 products</span>
+        <div class="sorting-control">
+          <label for="sorting-select">Sort by:</label>
+          <select id="sorting-select" class="sorting-select" onchange="sortProducts(this.value)">
+            <option value="az">Name (A-Z)</option>
+            <option value="za">Name (Z-A)</option>
+            <option value="price-asc">Price (Low to High)</option>
+            <option value="price-desc">Price (High to Low)</option>
+          </select>
+        </div>
       </aside>
       <div class="catalog"></div>
     </div>

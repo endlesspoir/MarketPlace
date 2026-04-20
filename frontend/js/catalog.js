@@ -1,7 +1,7 @@
 let products = [];
 let filteredProducts = [];
 
-import { addToCart, initCartBadge, isInCart } from "./cart-store.js";
+import { addToCart, initCartBadge } from "./cart-store.js";
 
 let filters = {
   ratings: [],
@@ -70,6 +70,31 @@ function applyAll() {
   updateCount();
 }
 
+function showCartToast(message) {
+  let container = document.querySelector(".cart-toast-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.className = "cart-toast-container";
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = "cart-toast";
+  toast.textContent = message;
+  container.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    toast.classList.add("show");
+  });
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => {
+      toast.remove();
+    }, 220);
+  }, 1800);
+}
+
 function renderProducts(list) {
   const catalog = document.querySelector(".catalog");
   catalog.innerHTML = "";
@@ -77,37 +102,15 @@ function renderProducts(list) {
   list.forEach(p => {
     const item = document.createElement("div");
     item.className = "product_item";
-    const inCart = isInCart(p.id);
 
     item.innerHTML = `
-      <div class="product_item">
+      <div class="product_item_image_container">
+        <div class="product_price_badge">$${p.price}</div>
 
-        <div class="product_item_image_container">
-          <div class="product_price_badge">$${p.price}</div>
+        <img src="${p.imagesUrl[0]}" alt="${p.name}">
 
-          <img src="${p.imagesUrl[0]}" alt="${p.name}">
-
-          <div class="product_hover">
-            <p class="product_title">${p.name}</p>
-
-            <div class="product_rating_tab">
-              <div class="product_rating_stars">
-                ${getStarsHTML(p.averageRating)}
-              </div>
-              <div class="product_rating_number">
-                (${p.averageRating})
-              </div>
-            </div>
-
-            <div class="product_bottom">
-              <span class="product_price_big">$${p.price}</span>
-              <button class="cart_btn ${inCart ? "in-cart" : ""}" data-id="${p.id}" type="button">${inCart ? "Added" : "Add"}</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product_info">
-          <p class="product_name">${p.name}</p>
+        <div class="product_hover">
+          <p class="product_title">${p.name}</p>
 
           <div class="product_rating_tab">
             <div class="product_rating_stars">
@@ -117,8 +120,27 @@ function renderProducts(list) {
               (${p.averageRating})
             </div>
           </div>
-        </div>
 
+          <div class="product_bottom">
+            <span class="product_price_big">$${p.price}</span>
+            <button class="cart_btn" data-id="${p.id}" type="button" aria-label="Add to cart">
+              <img src="./svg/cart.svg" alt="">
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product_info">
+        <p class="product_name">${p.name}</p>
+
+        <div class="product_rating_tab">
+          <div class="product_rating_stars">
+            ${getStarsHTML(p.averageRating)}
+          </div>
+          <div class="product_rating_number">
+            (${p.averageRating})
+          </div>
+        </div>
       </div>
     `;
 
@@ -138,8 +160,7 @@ function renderProducts(list) {
     addBtn?.addEventListener("click", event => {
       event.stopPropagation();
       addToCart(p.id, 1);
-      addBtn.textContent = "Added";
-      addBtn.classList.add("in-cart");
+      showCartToast(`${p.name} added to cart`);
     });
 
     catalog.appendChild(item);
@@ -159,11 +180,23 @@ window.applyRating = function(rating, isChecked) {
 };
 
 window.applyPrice = function() {
-  const min = Number(document.getElementById("min").value);
-  const max = Number(document.getElementById("max").value);
+  const minInput = document.getElementById("min");
+  const maxInput = document.getElementById("max");
+  const minRaw = Number(minInput.value);
+  const maxRaw = Number(maxInput.value);
+  const min = isNaN(minRaw) ? 0 : Math.max(0, minRaw);
+  const max = isNaN(maxRaw) ? Infinity : Math.max(0, maxRaw);
 
-  filters.minPrice = isNaN(min) ? 0 : min;
-  filters.maxPrice = isNaN(max) ? Infinity : max;
+  minInput.value = Number.isFinite(min) ? String(min) : "";
+  maxInput.value = Number.isFinite(max) ? String(max) : "";
+
+  if (min > max) {
+    filters.minPrice = max;
+    filters.maxPrice = min;
+  } else {
+    filters.minPrice = min;
+    filters.maxPrice = max;
+  }
 
   applyAll();
 };
@@ -175,5 +208,5 @@ window.sortProducts = function(type) {
 
 function updateCount() {
   document.querySelector(".shown-items-count").textContent =
-    `${filteredProducts.length} Elements`;
+    `${filteredProducts.length} products`;
 }
