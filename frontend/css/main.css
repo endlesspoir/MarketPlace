@@ -202,6 +202,8 @@ main {
 @media (max-width: 1024px) {
   main {
     flex-direction: column;
+    gap: 20px;
+    padding-top: 24px;
   }
 
   .filters-toolbar {
@@ -211,6 +213,10 @@ main {
 
   .catalog {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product_item_image_container {
+    height: 300px;
   }
 }
 
@@ -230,6 +236,35 @@ main {
 
   .catalog {
     grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .hero {
+    min-height: 150px;
+    padding: 20px 16px;
+  }
+
+  main {
+    width: calc(100% - 24px);
+    padding-top: 20px;
+    gap: 16px;
+  }
+
+  .sidebar {
+    padding: 14px;
+  }
+
+  .sorting-count-bar {
+    padding: 12px;
+  }
+
+  .shown-items-count {
+    width: 100%;
+  }
+
+  .product_item_image_container {
+    height: auto;
+    aspect-ratio: 4 / 5;
   }
 }
 
@@ -467,4 +502,89 @@ main {
 .cart-toast.show {
   transform: translateY(0);
   opacity: 1;
+}
+
+@media (hover: none), (max-width: 768px) {
+  .product_item:hover {
+    border-color: #e5e7eb;
+    box-shadow: none;
+  }
+
+  .product_item:hover .product_item_image_container img {
+    transform: none;
+  }
+
+  .product_item_image_container::after {
+    display: none;
+  }
+
+  .product_item:hover .product_price_badge {
+    opacity: 1;
+    transform: none;
+  }
+
+  .product_info,
+  .product_item:hover .product_info {
+    opacity: 1;
+  }
+
+  .product_hover {
+    position: static;
+    transform: none;
+    opacity: 1;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    background: #fff;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0 14px 14px;
+    border-top: 1px solid #f3f4f6;
+  }
+
+  .product_item:hover .product_hover {
+    transform: none;
+    opacity: 1;
+  }
+
+  .product_price_big {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .product_item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product_item_image_container {
+    height: auto !important;
+    aspect-ratio: 4 / 5;
+  }
+}
+
+@media (max-width: 768px) {
+  .catalog {
+    grid-template-columns: 1fr;
+  }
+
+  .product_item_image_container {
+    aspect-ratio: 3 / 4;
+  }
+
+  .product_info {
+    min-height: 0;
+    padding: 14px 12px 12px;
+  }
+
+  .product_name {
+    min-height: 0;
+    margin-bottom: 6px;
+  }
 }

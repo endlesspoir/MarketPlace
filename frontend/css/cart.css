@@ -540,7 +540,7 @@ body {
   }
 
   .summary {
-    max-width: 520px;
+    max-width: 100%;
   }
 }
 
@@ -578,13 +578,21 @@ body {
   }
 
   .cart-item {
-    grid-template-columns: 78px minmax(0, 1fr);
+    grid-template-columns: 78px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "image main remove"
+      "image qty price";
     gap: 10px;
   }
 
   .cart-item-image {
+    grid-area: image;
     width: 78px;
     height: 78px;
+  }
+
+  .cart-item-main {
+    grid-area: main;
   }
 
   .cart-item-title {
@@ -596,12 +604,15 @@ body {
   }
 
   .qty-control {
+    grid-area: qty;
     margin-top: 8px;
   }
 
   .cart-price-wrap {
+    grid-area: price;
     margin-top: 8px;
-    text-align: left;
+    text-align: right;
+    align-self: center;
   }
 
   .cart-price {
@@ -609,6 +620,103 @@ body {
   }
 
   .remove-btn {
-    margin-left: auto;
+    grid-area: remove;
+    margin: 0;
+    justify-self: end;
+    align-self: start;
+  }
+}
+
+@media (max-width: 520px) {
+  .cart-page {
+    width: calc(100% - 20px);
+  }
+
+  .cart-top-inner {
+    padding: 12px;
+  }
+
+  .cart-title {
+    font-size: 30px;
+  }
+
+  .checkout-steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .step-divider {
+    display: none;
+  }
+
+  .step {
+    font-size: 14px;
+  }
+
+  .step-dot {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+
+  .cart-item {
+    grid-template-columns: 70px minmax(0, 1fr) auto;
+    padding: 10px;
+  }
+
+  .cart-item-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+  }
+
+  .cart-item-title {
+    font-size: 16px;
+  }
+
+  .qty-control {
+    min-width: 104px;
+    height: 34px;
+  }
+
+  .qty-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 18px;
+  }
+
+  .qty-value {
+    font-size: 14px;
+  }
+
+  .cart-price {
+    font-size: 21px;
+  }
+
+  .summary-head h2 {
+    font-size: 26px;
+  }
+
+  .summary-head p,
+  .promo-label {
+    font-size: 15px;
+  }
+
+  .promo-row {
+    flex-direction: column;
+  }
+
+  .promo-row button {
+    width: 100%;
+    height: 42px;
+  }
+
+  .summary-line {
+    font-size: 15px;
+  }
+
+  .summary-line.total {
+    font-size: 20px;
   }
 }
