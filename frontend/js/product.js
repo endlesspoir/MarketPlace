@@ -1,4 +1,5 @@
-import { addToCart, initCartBadge, isInCart } from "./cart-store.js";
+import { addToCart, initCartBadge } from "./cart-store.js";
+import { initMobileMenu } from "./mobile-menu.js";
 
 const KNOWN_BASE_KEYS = new Set(["id", "name", "description", "price", "imagesUrl", "averageRating", "keyHighlights"]);
 
@@ -31,12 +32,9 @@ function getHighlights(product) {
 }
 
 function getGalleryImages(imagesUrl) {
-  const source = Array.isArray(imagesUrl) && imagesUrl.length > 0 ? imagesUrl : ["img/1.png"];
-  const normalized = [...source];
-  while (normalized.length < 3) {
-    normalized.push(source[normalized.length % source.length]);
-  }
-  return normalized.slice(0, 5);
+  const source = Array.isArray(imagesUrl) && imagesUrl.length > 0 ? imagesUrl.slice(0, 5) : ["img/1.png"];
+  if (source.length === 1) return [source[0], source[0], source[0]];
+  return source;
 }
 
 function renderBreadcrumbs(product) {
@@ -55,7 +53,8 @@ function renderProduct(product) {
   const highlights = getHighlights(product);
   const specs = getSpecs(product);
   const galleryImages = getGalleryImages(product.imagesUrl);
-  const inCart = isInCart(product.id);
+  const hasMultipleOriginalImages =
+    Array.isArray(product.imagesUrl) && product.imagesUrl.filter(Boolean).length > 1;
 
   shell.innerHTML = `
     <article class="product-card">
@@ -65,11 +64,13 @@ function renderProduct(product) {
           <button id="prev-image" class="media-nav prev" type="button" aria-label="Previous image">&#8249;</button>
           <button id="next-image" class="media-nav next" type="button" aria-label="Next image">&#8250;</button>
         </div>
-        <div class="media-thumbs" id="media-thumbs">
-          ${galleryImages
-            .map((src, idx) => `<button class="thumb-btn ${idx === 0 ? "active" : ""}" data-index="${idx}" type="button"><img src="./${src}" alt="${product.name}"></button>`)
-            .join("")}
-        </div>
+        ${hasMultipleOriginalImages
+          ? `<div class="media-thumbs" id="media-thumbs">
+              ${galleryImages
+                .map((src, idx) => `<button class="thumb-btn ${idx === 0 ? "active" : ""}" data-index="${idx}" type="button"><img src="./${src}" alt="${product.name}"></button>`)
+                .join("")}
+            </div>`
+          : ""}
       </section>
 
       <section class="product-details">
@@ -86,14 +87,9 @@ function renderProduct(product) {
           <ul>${highlights.map(line => `<li>${line}</li>`).join("")}</ul>
         </div>
 
-        <section class="description accordion" id="desc-accordion">
-          <button class="accordion-trigger" id="accordion-trigger" type="button">
-            <span>Extended Description</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content" id="accordion-content">
-            <p>${product.description || "No description available."}</p>
-          </div>
+        <section class="description">
+          <h3>Extended Description</h3>
+          <p>${product.description || "No description available."}</p>
         </section>
 
         <div class="qty-row">
@@ -105,7 +101,7 @@ function renderProduct(product) {
           </div>
         </div>
 
-        <button type="button" class="add-cart ${inCart ? "in-cart" : ""}" id="add-cart-btn">${inCart ? "In Cart" : "Add to Cart"}</button>
+        <button type="button" class="add-cart" id="add-cart-btn">Add to Cart</button>
 
         <section class="specs">
           <h3>Technical Specifications</h3>
@@ -119,27 +115,58 @@ function renderProduct(product) {
 
   let quantity = 1;
   let currentIndex = 0;
+  let isSliding = false;
+  const SLIDE_MS = 260;
 
   const mainImage = document.getElementById("main-image");
   const thumbsWrap = document.getElementById("media-thumbs");
   const qtyValue = document.getElementById("qty-value");
   const addBtn = document.getElementById("add-cart-btn");
 
-  const setImage = nextIndex => {
-    currentIndex = (nextIndex + galleryImages.length) % galleryImages.length;
-    mainImage.src = `./${galleryImages[currentIndex]}`;
-    thumbsWrap.querySelectorAll(".thumb-btn").forEach(btn => {
-      btn.classList.toggle("active", Number(btn.dataset.index) === currentIndex);
-    });
+  const setImage = (nextIndex, direction = "next") => {
+    if (isSliding) return;
+    const normalizedIndex = (nextIndex + galleryImages.length) % galleryImages.length;
+    if (normalizedIndex === currentIndex) return;
+    isSliding = true;
+
+    const exitClass = direction === "prev" ? "slide-out-right" : "slide-out-left";
+    const enterClass = direction === "prev" ? "slide-in-left" : "slide-in-right";
+
+    mainImage.classList.remove("slide-in-left", "slide-in-right", "slide-out-left", "slide-out-right");
+    void mainImage.offsetWidth;
+    mainImage.classList.add(exitClass);
+
+    window.setTimeout(() => {
+      currentIndex = normalizedIndex;
+      mainImage.src = `./${galleryImages[currentIndex]}`;
+      mainImage.classList.remove(exitClass);
+      mainImage.classList.add(enterClass);
+
+      if (thumbsWrap) {
+        thumbsWrap.querySelectorAll(".thumb-btn").forEach(btn => {
+          btn.classList.toggle("active", Number(btn.dataset.index) === currentIndex);
+        });
+      }
+
+      window.setTimeout(() => {
+        mainImage.classList.remove(enterClass);
+        isSliding = false;
+      }, SLIDE_MS);
+    }, Math.round(SLIDE_MS / 2));
   };
 
-  document.getElementById("prev-image").addEventListener("click", () => setImage(currentIndex - 1));
-  document.getElementById("next-image").addEventListener("click", () => setImage(currentIndex + 1));
-  thumbsWrap.addEventListener("click", event => {
-    const btn = event.target.closest(".thumb-btn");
-    if (!btn) return;
-    setImage(Number(btn.dataset.index));
-  });
+  document.getElementById("prev-image").addEventListener("click", () => setImage(currentIndex - 1, "prev"));
+  document.getElementById("next-image").addEventListener("click", () => setImage(currentIndex + 1, "next"));
+
+  if (thumbsWrap) {
+    thumbsWrap.addEventListener("click", event => {
+      const btn = event.target.closest(".thumb-btn");
+      if (!btn) return;
+      const targetIndex = Number(btn.dataset.index);
+      const direction = targetIndex < currentIndex ? "prev" : "next";
+      setImage(targetIndex, direction);
+    });
+  }
 
   const updateQty = () => {
     qtyValue.textContent = String(quantity);
@@ -157,16 +184,8 @@ function renderProduct(product) {
 
   addBtn.addEventListener("click", () => {
     addToCart(product.id, quantity);
-    addBtn.classList.add("in-cart");
-    addBtn.textContent = "In Cart";
   });
 
-  const accordionTrigger = document.getElementById("accordion-trigger");
-  const accordionContent = document.getElementById("accordion-content");
-  accordionTrigger.addEventListener("click", () => {
-    const opened = accordionContent.classList.toggle("open");
-    accordionTrigger.querySelector(".accordion-icon").textContent = opened ? "-" : "+";
-  });
 }
 
 function renderNotFound() {
@@ -177,6 +196,7 @@ function renderNotFound() {
 }
 
 async function initProductPage() {
+  initMobileMenu();
   initCartBadge();
   try {
     const res = await fetch("./data/products.json");
@@ -194,4 +214,3 @@ async function initProductPage() {
 }
 
 initProductPage();
-
