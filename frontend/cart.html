@@ -25,6 +25,11 @@
     </nav>
 
     <div class="actions">
+      <button class="burger-btn" id="burger-btn" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <button class="search-btn">
         <img src="svg/search.svg" alt="Поиск">
       </button>
@@ -36,6 +41,13 @@
       </div>
     </div>
   </header>
+  <div class="mobile-menu-backdrop" id="mobile-menu-backdrop" hidden></div>
+  <aside class="mobile-menu" id="mobile-menu" hidden>
+    <a href="#">Shop</a>
+    <a href="#">Categories</a>
+    <a href="#">Deals</a>
+    <a href="#">About</a>
+  </aside>
 
   <main class="cart-page" id="cart-page"></main>
 

@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PawsStore</title>
 
 
@@ -13,7 +14,7 @@
 
 <body>
 
-  <header class="header">
+  <header class="header home-header">
     <a href="./index.html" class="logo">
       <div class="logo-icon">
         <img src="svg/paw.svg" alt="PawsStore">
@@ -21,7 +22,7 @@
       <span class="logo-text">PawsStore</span>
     </a>
 
-    <nav>
+    <nav class="home-nav">
       <a href="#">Shop</a>
       <a href="#">Categories</a>
       <a href="#">Deals</a>
@@ -29,6 +30,11 @@
     </nav>
 
     <div class="actions">
+      <button class="burger-btn" id="burger-btn" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <button class="search-btn">
         <img src="svg/search.svg" alt="Поиск">
       </button>
@@ -40,6 +46,13 @@
       </div>
     </div>
   </header>
+  <div class="mobile-menu-backdrop" id="mobile-menu-backdrop" hidden></div>
+  <aside class="mobile-menu" id="mobile-menu" hidden>
+    <a href="#">Shop</a>
+    <a href="#">Categories</a>
+    <a href="#">Deals</a>
+    <a href="#">About</a>
+  </aside>
 
   <section class="hero">
     <h1>Shop All Products</h1>
@@ -189,7 +202,9 @@
   </footer>
   <script type="module">
     import { initCatalog } from "./js/catalog.js";
+    import { initMobileMenu } from "./js/mobile-menu.js";
     initCatalog();
+    initMobileMenu();
   </script>
 </body>
 </html>

@@ -7,6 +7,7 @@ import {
   setCartItemQty,
   setPromoCode
 } from "./cart-store.js";
+import { initMobileMenu } from "./mobile-menu.js";
 
 const TAX_RATE = 0.08;
 const DISCOUNT_CODE = "SAVE10";
@@ -297,6 +298,7 @@ async function initPage(productsSource) {
 }
 
 async function initCartPage() {
+  initMobileMenu();
   initCartBadge();
   try {
     await initPage();
